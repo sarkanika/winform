@@ -49,10 +49,6 @@ namespace WindowsFormsApp1
             tabControl.SelectedIndex = 0;
 
             string[] images = Directory.GetFiles(@currentPath);
-            if (imageDatas == null || imageDatas.All(im => im == null))
-            {
-                imageDatas = new ImageData[images.Length];
-            }
             
             pictureBoxes = new PictureBox[images.Length];
             int tabPageSize = images.Length / 20 + ((images.Length % 20 != 0) ? 1 : 0); //determining number of tabpages based on the number of pages
@@ -123,8 +119,16 @@ namespace WindowsFormsApp1
                     image_y += y_incre;
                     label_y += y_incre;
                 }
+            }
 
-                imageDatas[i] = new ImageData(images[i]); //adding each image into an array of ImageData objects
+            if(imageDatas == null || imageDatas.All(im => im == null))
+            {
+                int i = 0;
+                imageDatas = new ImageData[images.Length];
+                foreach(string img in images)
+                {
+                    imageDatas[i++] = new ImageData(img);
+                }
             }
 
             //
