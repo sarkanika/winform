@@ -218,7 +218,7 @@ namespace WindowsFormsApp1
             search.Location = new Point(0, 0);
             search.Size = new Size(150, 50);
             search.Text = "Search";
-            search.Enabled = relFeedback && rlvntList.Any();
+            search.Enabled = relFeedback && rlvntSet.Any();
             search.Click += Search_Click;
             tableLayoutPanel1.Controls.Add(search, 0, 1);
 
@@ -270,7 +270,7 @@ namespace WindowsFormsApp1
                     cb.Name = image.fileLocation;
                     cb.Text = "Relevant";
                     cb.Location = new Point(0, 0);
-                    cb.Checked = rlvntList.Contains(image);
+                    cb.Checked = rlvntSet.Contains(image);
                     cb.CheckedChanged += Cb_CheckedChanged;
 
                     TableLayoutPanel tbl = new TableLayoutPanel();
@@ -348,8 +348,8 @@ namespace WindowsFormsApp1
                     featureMatrix.Values.ToList().ForEach(x => x[i] = stdev[i] != 0 ? (x[i] - avg[i]) / stdev[i] : 0);
                 }
             }
-            rlvntList.Add(data);
-            Dictionary<ImageData, double[]> relMatrix = featureMatrix.Where(fm => rlvntList.Contains(fm.Key)).ToDictionary(fm => fm.Key, fm => fm.Value);
+            rlvntSet.Add(data);
+            Dictionary<ImageData, double[]> relMatrix = featureMatrix.Where(fm => rlvntSet.Contains(fm.Key)).ToDictionary(fm => fm.Key, fm => fm.Value);
             imageDiffPairs.Clear();
             double[] rlvtAvg = GetFeaturesAvg(relMatrix);
             double[] rlvntStdev = GetFeatureStdev(relMatrix, rlvtAvg);
@@ -387,18 +387,18 @@ namespace WindowsFormsApp1
             CheckBox cb = (CheckBox)sender;
             if (cb.Checked)
             {
-                rlvntList.AddRange(imageDatas.Where(im => im.fileLocation.Equals(cb.Name, StringComparison.OrdinalIgnoreCase)).ToList());
+                rlvntSet.Add(imageDatas.Where(im => im.fileLocation.Equals(cb.Name, StringComparison.OrdinalIgnoreCase)).First());
                 if(search.Enabled == false)
                 {
                     search.Enabled = true;
                 }
             } else 
             {
-                if(rlvntList.Any() 
-                    && rlvntList.Where(im => im.fileLocation.Equals(cb.Name, StringComparison.OrdinalIgnoreCase)).Any()) {
-                    rlvntList.RemoveAll(im => im.fileLocation.Equals(cb.Name, StringComparison.OrdinalIgnoreCase));
+                if(rlvntSet.Any() 
+                    && rlvntSet.Where(im => im.fileLocation.Equals(cb.Name, StringComparison.OrdinalIgnoreCase)).Any()) {
+                    rlvntSet.RemoveWhere(im => im.fileLocation.Equals(cb.Name, StringComparison.OrdinalIgnoreCase));
                 }
-                if(!rlvntList.Any() || (rlvntList.Count() == 1 && rlvntList.Contains(data)))
+                if(!rlvntSet.Any() || (rlvntSet.Count() == 1 && rlvntSet.Contains(data)))
                 {
                     search.Enabled = false;
                 }
@@ -410,7 +410,7 @@ namespace WindowsFormsApp1
         {
             this.Controls.Clear();
             relFeedback = false;
-            rlvntList.Clear();
+            rlvntSet.Clear();
             this.InitializeComponent();
         }
 
@@ -458,7 +458,7 @@ namespace WindowsFormsApp1
         }
 
         private ImageData data;
-        private List<ImageData> rlvntList = new List<ImageData>();
+        private HashSet<ImageData> rlvntSet = new HashSet<ImageData>();
         private List<CheckBox> checkBoxes = new List<CheckBox>();
 
         private const string colorIntensity = "colorIntensity";
