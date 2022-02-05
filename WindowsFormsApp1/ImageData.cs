@@ -14,6 +14,7 @@ namespace WindowsFormsApp1
         public string fileLocation;
         public int[] colorIntensity;
         public int[] colorCode;
+        public int[] features;
 
         public ImageData()
         {
@@ -21,6 +22,7 @@ namespace WindowsFormsApp1
             imageName = "";
             colorIntensity = new int[25];
             colorCode = new int[64];
+            features = new int[colorCode.Length + colorIntensity.Length];
         }
 
         public ImageData (String location)
@@ -29,6 +31,9 @@ namespace WindowsFormsApp1
             imageName = Path.GetFileName(location);
             colorIntensity = getColorIntensity(location);
             colorCode = getColorCode(location);
+            List<int> fList = new List<int>(colorIntensity);
+            fList.AddRange(colorCode);
+            features = fList.ToArray();
         }
 
         public override bool Equals(Object obj)
