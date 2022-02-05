@@ -137,21 +137,21 @@ namespace WindowsFormsApp1
             displayBox = new PictureBox();
             displayBox.Name = "displayBox";
             displayBox.BackColor = Color.White;
-            displayBox.Size = new Size(400,300);
+            displayBox.Size = new Size(400, 300);
             displayBox.Location = new Point(580, 30);
             displayBox.SizeMode = PictureBoxSizeMode.AutoSize;
             displayBox.Margin = new Padding(3);
-
+            
             //
             //intensityMethod (Button)
             //
             intensityMethod = new Button();
             intensityMethod.Name = "intensityMethod";
-            intensityMethod.Text = "Retrieve by Intensity Method";
-            intensityMethod.Location = new Point(700, 450);
-            intensityMethod.Size = new Size(200, 50);
-            intensityMethod.Padding = new Padding(5);
-            intensityMethod.BackColor = Color.Transparent;
+            intensityMethod.Text = "Intensity Method";
+            intensityMethod.Location = new Point(12,12);
+            intensityMethod.Size = new Size(150, 30);
+            intensityMethod.Padding = new Padding(3);
+            intensityMethod.BackColor = Color.Empty;
             intensityMethod.Click += IntensityMethod_Click;
 
             //
@@ -159,12 +159,37 @@ namespace WindowsFormsApp1
             //
             colourCodeMethod = new Button();
             colourCodeMethod.Name = "colourCodeMethod";
-            colourCodeMethod.Text = "Retrieve by Colour Code Method";
-            colourCodeMethod.Location = new Point(700, 520);
-            colourCodeMethod.Size = new Size(200, 50);
-            colourCodeMethod.Padding = new Padding(5);
-            colourCodeMethod.BackColor = Color.Transparent;
+            colourCodeMethod.Text = "Colour Code";
+            colourCodeMethod.Location = new Point(12,12);
+            colourCodeMethod.Size = new Size(150, 30);
+            colourCodeMethod.Padding = new Padding(3);
+            colourCodeMethod.BackColor = Color.Empty;
             colourCodeMethod.Click += ColourCodeMethod_Click;
+
+            //
+            //colorCodeIntensityMethod (Button)
+            //
+            colorCodeIntensityMethod = new Button();
+            colorCodeIntensityMethod.Name = "colorCodeIntensityMethod";
+            colorCodeIntensityMethod.Text = "Color Code + Intensity";
+            colorCodeIntensityMethod.Location = new Point(12,12);
+            colorCodeIntensityMethod.Size = new Size(150, 30);
+            colorCodeIntensityMethod.Padding = new Padding(3);
+            colorCodeIntensityMethod.BackColor = Color.Empty;
+            colorCodeIntensityMethod.Click += ColorCodeIntensityMethod_Click;            
+
+            //
+            //tableLayoutPanel1 
+            //
+            tableLayoutPanel2 = new TableLayoutPanel();
+            tableLayoutPanel2.ColumnCount = 2;
+            tableLayoutPanel2.Location = new Point(650, 450);
+            tableLayoutPanel2.Anchor = AnchorStyles.Right | AnchorStyles.Bottom;
+            tableLayoutPanel2.AutoSize = true;
+            tableLayoutPanel2.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            tableLayoutPanel2.Controls.Add(intensityMethod, 0, 0);
+            tableLayoutPanel2.Controls.Add(colourCodeMethod, 0, 1);
+            tableLayoutPanel2.Controls.Add(colorCodeIntensityMethod, 0, 2);
 
             // 
             // Form1
@@ -174,42 +199,13 @@ namespace WindowsFormsApp1
             this.ClientSize = new System.Drawing.Size(1000, 600);
             this.Controls.Add(this.tabControl);
             this.Controls.Add(displayBox);
-            this.Controls.Add(intensityMethod);
-            this.Controls.Add(colourCodeMethod);
+            this.Controls.Add(tableLayoutPanel2);
             this.Name = "Image Query";
             this.Text = "Image Query";
             this.Load += new System.EventHandler(this.Form1_Load);
             this.tabControl.ResumeLayout(false);
             this.ResumeLayout(false);
 
-        }
-
-        //returning colour intensity histogram difference
-        private Double intensityhistogramDifference(ImageData data1, ImageData data2)
-        {
-            Double totaldiff = 0;
-            Bitmap bmp1 = new Bitmap(data1.fileLocation);
-            Bitmap bmp2 = new Bitmap(data2.fileLocation);
-            for (int i = 0; i < 25; i++)
-            {
-                Double diff = Math.Abs(((Double)data1.colorIntensity[i]/ (Double)(bmp1.Width * bmp1.Height)) - ((Double)data2.colorIntensity[i]/ (Double)(bmp2.Width * bmp2.Height)));
-                totaldiff += diff;
-            }
-            return totaldiff;
-        }
-
-        //returning colour code histogram difference
-        private Double codeHistogramDifference(ImageData data1, ImageData data2)
-        {
-            Double totaldiff = 0;
-            Bitmap bmp1 = new Bitmap(data1.fileLocation);
-            Bitmap bmp2 = new Bitmap(data2.fileLocation);
-            for (int i = 0; i < 64; i++)
-            {
-                Double diff = Math.Abs(((Double)data1.colorCode[i] / (Double)(bmp1.Width * bmp1.Height)) - ((Double) data2.colorCode[i] / (Double)(bmp2.Width * bmp2.Height)));
-                totaldiff += diff;
-            }
-            return totaldiff;
         }
 
         #endregion
@@ -221,10 +217,15 @@ namespace WindowsFormsApp1
         private PictureBox displayBox;
         private Button intensityMethod;
         private Button colourCodeMethod;
+        private Button colorCodeIntensityMethod;
         private PictureBox[] resultBoxes;
         private SplitContainer splitContainer;
-        private VScrollBar vscroll;
         private Button reset;
+        private TableLayoutPanel tableLayoutPanel1;
+        private TableLayoutPanel tableLayoutPanel2;
+        private CheckBox relevance;
+        private GroupBox groupBox;
+        private Button search;
 
 
         private const int firstImage_x = 12;
